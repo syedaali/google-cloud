@@ -6,11 +6,23 @@ First you must specify project, after that you can use the other commands.
 '''
 import subprocess
 import sys
-
+import re
 
 def error(s):
     print 'ERROR: ' + s
 
+def check_version():
+    cmd = 'gcloud --version'
+    try:
+        o = subprocess.check_output(cmd,shell=True)
+    except subprocess.CalledProcessError:
+        error('unable to check Google SDK version')
+        sys.exit(1)
+    else:
+        if re.findall('Google Cloud SDK 0.9.40',o):
+            print "Found compatible Google SDK version"
+            return True
+    return  False
 
 def show_menu():
     '''
@@ -197,6 +209,9 @@ def main():
     '''
     global project
     project = None
+
+    if check_version():
+        pass
 
     while True:
         choice = show_menu()
