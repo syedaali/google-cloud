@@ -3,15 +3,13 @@ __author__ = 'syedaali'
 '''
 Program to provide limited access to GCP for Network Operations Center.
 First you must specify project, after that you can use the other commands.
-v0.1
-alicsyed at gmail dot com
 '''
 import subprocess
 import sys
 
 
 def error(s):
-    print 'Error: ' + s
+    print 'ERROR: ' + s
 
 
 def show_menu():
@@ -20,18 +18,21 @@ def show_menu():
     :return: Numerical choice selected
     '''
     menu_d = {
-        '1.': 'Set current project',
-        '2.': 'List current project',
-        '3.': 'List compute instances',
-        '4.': 'List firewall rules',
-        '5.': 'List zones',
-        '6.': 'List regions',
-        '7.': 'List images',
-        '8.': 'List target pools',
+        'a.': 'Set current project',
+        'b.': 'List current project',
+        'c.': 'List compute instances',
+        'd.': 'List firewall rules',
+        'e.': 'List zones',
+        'f.': 'List regions',
+        'g.': 'List images',
+        'h.': 'List target pools',
+        'i.': 'Check cloud authentication',
+        'j.': 'List addresses',
         'q.': 'Quit'
     }
 
     print '-' * 80
+    print 'SELECT a letter: '
     for k, v in sorted(menu_d.iteritems()):
         print k, v
 
@@ -63,7 +64,7 @@ def print_project():
     if check_project():
         print 'project is {}'.format(project)
     else:
-        print 'Error: project is not defined'
+        error('Set current project first')
 
 
 def check_project():
@@ -161,6 +162,34 @@ def list_target_pools():
         print o
 
 
+def check_cloud_auth():
+    '''
+    Check users credentials on GCP
+    :return:
+    '''
+    cmd = 'gcloud auth list'
+    try:
+        o = subprocess.check_output(cmd, shell=True)
+    except subprocess.CalledProcessError:
+        pass
+    else:
+        print o
+
+
+def list_address():
+    '''
+    Check users credentials on GCP
+    :return:
+    '''
+    cmd = 'gcloud compute addresses list --project ' + project
+    try:
+        o = subprocess.check_output(cmd, shell=True)
+    except subprocess.CalledProcessError:
+        pass
+    else:
+        print o
+
+
 def main():
     '''
     Main point of entry, shows menu and calls functions depending upon choice
@@ -171,40 +200,47 @@ def main():
 
     while True:
         choice = show_menu()
-        if choice == '1':
+        if choice == 'a':
             set_project()
-        elif choice == '2':
+        elif choice == 'b':
             print_project()
-        elif choice == '3':
+        elif choice == 'c':
             if check_project():
                 list_compute_instances()
             else:
-                error('project is not defined')
-        elif choice == '4':
+                error(' Set current project first')
+        elif choice == 'd':
             if check_project():
                 list_firewall_rules()
             else:
-                error('project is not defined')
-        elif choice == '5':
+                error(' Set current project first')
+        elif choice == 'e':
             if check_project():
                 list_zones()
             else:
-                error('project is not defined')
-        elif choice == '6':
+                error(' Set current project first')
+        elif choice == 'f':
             if check_project():
                 list_regions()
             else:
-                error('project is not defined')
-        elif choice == '7':
+                error(' Set current project first')
+        elif choice == 'g':
             if check_project():
                 list_images()
             else:
-                error('project is not defined')
-        elif choice == '8':
+                error(' Set current project first')
+        elif choice == 'h':
             if check_project():
                 list_target_pools()
             else:
-                error('project is not defined')
+                error(' Set current project first')
+        elif choice == 'i':
+            check_cloud_auth()
+        elif choice == 'j':
+            if check_project():
+                list_address()
+            else:
+                error(' Set current project first')
         elif choice == 'q':
             sys.exit(0)
         else:
