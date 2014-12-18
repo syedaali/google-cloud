@@ -7,9 +7,21 @@ First you must specify project, after that you can use the other commands.
 import subprocess
 import sys
 import re
+import signal
 
 def error(s):
     print 'ERROR: ' + s
+
+def sig_handler(signum, stack):
+    '''
+    :param signum:
+    :param stack:
+    :return:
+    '''
+    sig_name = tuple((v) for v, k in signal.__dict__.iteritems() if k == signum)[0]
+    print '\nReceived {0}, quitting'.format(sig_name)
+    sys.exit(0)
+
 
 def check_version():
     cmd = 'gcloud --version'
@@ -19,10 +31,10 @@ def check_version():
         error('unable to check Google SDK version')
         sys.exit(1)
     else:
-        if re.findall('Google Cloud SDK 0.9.40',o):
+        if re.match('Google Cloud SDK 0.9.40',o):
             print "Found compatible Google SDK version"
             return True
-    return  False
+    return False
 
 def show_menu():
     '''
@@ -207,11 +219,17 @@ def main():
     Main point of entry, shows menu and calls functions depending upon choice
     :return:
     '''
+
+    signal.signal(signal.SIGINT,sig_handler)
+
     global project
     project = None
 
     if check_version():
         pass
+    else:
+        error('Incompatible SDK version, need 0.9.40')
+        sys.exit(0)
 
     while True:
         choice = show_menu()
