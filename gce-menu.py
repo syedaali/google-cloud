@@ -18,7 +18,7 @@ def sig_handler(signum, stack):
     :param stack:
     :return:
     '''
-    sig_name = tuple((v) for v, k in signal.__dict__.iteritems() if k == signum)[0]
+    sig_name = next(v for v, k in signal.__dict__.iteritems() if k == signum)
     print '\nReceived {0}, quitting'.format(sig_name)
     sys.exit(0)
 
