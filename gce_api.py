@@ -1,20 +1,39 @@
 __author__ = 'syedaali'
 
 '''
+12/24/2014
+
+This program is a demonstration of the Google Cloud Platform Python Library
+Specifically, it uses the Compute Python Library.
+The program connects to Google Compute Engine using the API and  lists
+the instances in a given project.
+
+Requirements: You need to download from GCP the secret key for your service
+account, and name the file p12.p12. Keep the file in the same directory as this program.
+
+Change the items in the section 'User replaceable items'.
+
+How to run this program: python gce_api.py
+'''
+
+'''
 We need to import 3 different modules, one to connect via HTTP to the API,
 the other to server->server authentication without a browser, and lastly to
 build the request
 '''
+
 import httplib2
 from oauth2client.client import SignedJwtAssertionCredentials
 from apiclient.discovery import build
 
-API_VERSION = 'v1'
-GCE_URL = 'https://www.googleapis.com/compute/%s/projects/' % (API_VERSION)
+# User replaceable items
 PROJECT_ID = 'replace with your project-id'
 DEFAULT_ZONE = 'replace with a GCE zone here'
-
 client_email = 'replace with an email from GCP Service Account OAuth'
+# End user replaceable items
+
+API_VERSION = 'v1'
+GCE_URL = 'https://www.googleapis.com/compute/%s/projects/' % (API_VERSION)
 
 #download P12 file from API & Auth->Credentials
 with open("p12.p12") as f:
