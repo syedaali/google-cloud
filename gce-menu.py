@@ -31,7 +31,7 @@ def check_version():
         error('unable to check Google SDK version')
         sys.exit(1)
     else:
-        if re.match('Google Cloud SDK 0.9.40',o):
+        if re.match('Google Cloud SDK 0.9.41',o):
             print "Found compatible Google SDK version"
             return True
     return False
